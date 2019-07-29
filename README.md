@@ -12,6 +12,7 @@ Based on the "ConnectionFactory.NET".
 - Connection Pooling
 - ExecuteNonQuery
 - ExecuteReader
+- ExecuteReaderAsync
 - ExecuteScalar
 
 
