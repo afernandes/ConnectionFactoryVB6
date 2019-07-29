@@ -29,6 +29,11 @@ Private m_Alias As String
 
 Private lTranLevel As Long
 
+
+Public Event WillExecute(Source As String, CursorType As ADODB.CursorTypeEnum, LockType As ADODB.LockTypeEnum, Options As Long, adStatus As ADODB.EventStatusEnum, ByVal pCommand As ADODB.Command, ByVal pRecordset As ADODB.Recordset, ByVal pConnection As ADODB.Connection)
+Public Event ExecuteComplete(ByVal RecordsAffected As Long, ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pCommand As ADODB.Command, ByVal pRecordset As ADODB.Recordset, ByVal pConnection As ADODB.Connection)
+Attribute ExecuteComplete.VB_MemberFlags = "200"
+
 '[Default]
 Public Function Init(sConnectionString As String) As Boolean
 Attribute Init.VB_UserMemId = 0
@@ -44,7 +49,26 @@ Public Function GetDBCommand() As DBCommand
     Set cmd = New DBCommand
 
     Set GetDBCommand = cmd.Init(Me)
-    
+
+End Function
+
+'Get DBReaderAsync
+Public Function GetDBReaderAsync() As DBReaderAsync
+    Dim reader As DBReaderAsync
+    Set reader = New DBReaderAsync
+
+    Set GetDBReaderAsync = reader.Init(Me)
+
+End Function
+
+
+'Get DBCommandAsync
+Public Function GetDBCommandAsync() As DBCommandAsync
+    Dim cmd As DBCommandAsync
+    Set cmd = New DBCommandAsync
+
+    Set GetDBCommandAsync = cmd.Init(Me)
+
 End Function
 
 'Get DBTransaction
@@ -53,7 +77,7 @@ Public Function GetDBTransaction() As DBTransaction
     Set tran = New DBTransaction
 
     Set GetDBTransaction = tran.Init(Me)
-    
+
 End Function
 
 
@@ -117,7 +141,17 @@ Friend Property Get Alias() As String
     Alias = m_Alias
 End Property
 
+'---------------------------------------------------------------------------------------
+' Procedure : EstablishFactoryConnection
+' Author    : ander
+' Date      : 27/04/2016
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Friend Sub EstablishFactoryConnection()
+
+   On Error GoTo EstablishFactoryConnection_Error
+
     If oDB Is Nothing Then
         Set oDB = New ADODB.Connection
     End If
@@ -125,6 +159,13 @@ Friend Sub EstablishFactoryConnection()
     If oDB.State = adStateClosed Then
         oDB.Open m_ConnectionString
     End If
+
+   On Error GoTo 0
+   Exit Sub
+
+EstablishFactoryConnection_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure EstablishFactoryConnection of Módulo de classe DBConnection"
 End Sub
 
 Friend Sub CloseFactoryConnection()
@@ -186,3 +227,16 @@ Private Sub oDB_RollbackTransComplete(ByVal pError As ADODB.Error, adStatus As A
     End If
 End Sub
 
+'Using DBCommandAsync
+Private Sub oDB_ExecuteComplete(ByVal RecordsAffected As Long, ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pCommand As ADODB.Command, ByVal pRecordset As ADODB.Recordset, ByVal pConnection As ADODB.Connection)
+    RaiseEvent ExecuteComplete(ByVal RecordsAffected, ByVal pError, adStatus, ByVal pCommand, ByVal pRecordset, ByVal pConnection)
+End Sub
+
+'Using DBCommandAsync
+Private Sub oDB_WillExecute(Source As String, CursorType As ADODB.CursorTypeEnum, LockType As ADODB.LockTypeEnum, Options As Long, adStatus As ADODB.EventStatusEnum, ByVal pCommand As ADODB.Command, ByVal pRecordset As ADODB.Recordset, ByVal pConnection As ADODB.Connection)
+    RaiseEvent WillExecute(Source, CursorType, LockType, Options, adStatus, ByVal pCommand, ByVal pRecordset, ByVal pConnection)
+End Sub
+
+Private Sub oDB_InfoMessage(ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
+    Debug.Print pError.Description
+End Sub

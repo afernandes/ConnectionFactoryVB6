@@ -1,6 +1,12 @@
 DBConnection = 130, 130, 922, 465, C
-DBCommand = 104, 104, 896, 439, Z
 DBParameter = 0, 0, 792, 335, C
 DBParameters = 26, 26, 818, 361, C
-DBPool = 52, 52, 844, 387, C
+DBPool = 52, 52, 843, 387, C
 DBTransaction = 78, 78, 870, 413, C
+DBCommand = 0, 0, 871, 426, C
+DBCommandAsync = 52, 52, 792, 478, C
+DBReaderAsync = 78, 78, 766, 578, C
+MTimer = 50, 50, 828, 450, C
+CTimer = 75, 75, 853, 453, C
+MDBUtil = 75, 75, 903, 394, C
+DBUtil = 100, 100, 928, 419, C

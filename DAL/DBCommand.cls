@@ -24,6 +24,7 @@ Private Sub Class_Terminate()
     bClassInit = False
 End Sub
 
+'Hide this method
 Friend Function Init(oDBConn As DBConnection) As DBCommand
     Set DBConn = oDBConn
     bClassInit = True
@@ -46,9 +47,9 @@ Public Function ExecuteNonQuery(cmdType As CommandTypeEnum, ByVal cmdText As Str
     
     Set ocmd = PrepareCommand(cmdType, cmdText, oParams)
     If RecordsAffected <= 0 Then
-        ocmd.Execute
+        ocmd.Execute , , adExecuteNoRecords
     Else
-        ocmd.Execute RecordsAffected
+        ocmd.Execute RecordsAffected, , adExecuteNoRecords
     End If
     ExecuteNonQuery = True
 

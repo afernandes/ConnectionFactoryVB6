@@ -1,9 +1,9 @@
 Type=Exe
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\Windows\SysWOW64\stdole2.tlb#OLE Automation
-Reference=*\G{15523AC4-5C7F-4039-924F-CCE1B620E0CD}#1.0#0#bin\ConnectionFactoryVB6.dll#Connection Factory DB VB6
 Reference=*\G{2A75196C-D9EB-4129-B803-931327F72D5C}#2.8#0#..\..\..\..\..\Program Files (x86)\Common Files\System\ado\msado28.tlb#Microsoft ActiveX Data Objects 2.8 Library
+Reference=*\AConnectionFactoryVB6.vbp
 Form=Form1.frm
-Module=Util; Module1.bas
+Module=MMain; Module1.bas
 IconForm="frmTest"
 Startup="Sub Main"
 HelpFile=""
